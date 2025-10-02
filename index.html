@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Trang Web Quản Lý Dữ Liệu</title>
+    <style>
+        /* Original CSS remains unchanged */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .add-section-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 12px 24px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        .add-section-btn:hover, .add-section-btn:active {
+            background: #229954;
+        }
+        .accordion {
+            list-style: none;
+        }
+        .accordion-item {
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .accordion-header {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 15px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .accordion-header:hover, .accordion-header:active {
+            background: #2980b9;
+        }
+        .edit-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            -webkit-appearance: none;
+        }
+        .edit-btn:hover, .edit-btn:active {
+            background: #c0392b;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            -webkit-transition: max-height 0.3s ease;
+        }
+        .accordion-content.active {
+            max-height: 1000px;
+        }
+        .sub-section {
+            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sub-section:last-child {
+            border-bottom: none;
+        }
+        .data-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: monospace;
+            -webkit-appearance: textarea;
+        }
+        .action-buttons {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            gap: 10px;
+            -webkit-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            -webkit-appearance: none;
+            min-width: 70px;
+        }
+        .btn:active {
+            opacity: 0.8;
+        }
+        .btn-copy {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-copy:hover {
+            background: #229954;
+        }
+        .btn-paste {
+            background: #f39c12;
+            color: white;
+        }
+        .btn-paste:hover {
+            background: #e67e22;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .accordion-header {
+                padding: 12px;
+                font-size: 16px;
+            }
+            .action-buttons {
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+            }
+            .btn {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                -ms-flex: 1;
+                flex: 1;
+                min-width: 80px;
+            }
+            .sub-section {
+                padding: 10px;
+            }
+            .add-section-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        @media (max-width: 480px) {
+            .accordion-header {
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-box-align: start;
+                -webkit-align-items: flex-start;
+                -ms-flex-align: start;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .edit-btn {
+                -ms-flex-item-align: end;
+                -webkit-align-self: flex-end;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quản Lý Dữ Liệu - 5 Mục Chính (Có Thể Thêm)</h1>
+        <button class="add-section-btn" onclick="addNewSection()">Thêm Mục</button>
+        <ul class="accordion" id="accordion"></ul>
+    </div>
+
+    <script>
+        // Dữ liệu mặc định: 5 mục, mỗi mục có 5 phần con
+        var defaultSections = [
+            { name: 'Mục 1', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] },
+            { name: 'Mục 2', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] },
+            { name: 'Mục 3', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] },
+            { name: 'Mục 4', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] },
+            { name: 'Mục 5', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] }
+        ];
+
+        var sections = [];
+        for (var i = 0; i < defaultSections.length; i++) {
+            sections[i] = {};
+            sections[i].name = defaultSections[i].name;
+            sections[i].subs = defaultSections[i].subs.slice();
+        }
+
+        // Tạo accordion
+        function renderAccordion() {
+            var accordion = document.getElementById('accordion');
+            var html = '';
+            for (var i = 0; i < sections.length; i++) {
+                var sectionHtml = '';
+                for (var j = 0; j < sections[i].subs.length; j++) {
+                    sectionHtml += '<div class="sub-section">' +
+                        '<textarea class="data-input" placeholder="Nhập dữ liệu ở đây..." onchange="updateData(' + i + ', ' + j + ', this.value)">' + sections[i].subs[j].data + '</textarea>' +
+                        '<div class="action-buttons">' +
+                            '<button class="btn btn-copy" onclick="copyData(' + i + ', ' + j + ')">Copy</button>' +
+                            '<button class="btn btn-paste" onclick="pasteData(' + i + ', ' + j + ')">Dán</button>' +
+                            '<button class="btn btn-delete" onclick="deleteData(' + i + ', ' + j + ')">Xóa</button>' +
+                        '</div>' +
+                    '</div>';
+                }
+                html += '<li class="accordion-item">' +
+                    '<div class="accordion-header" onclick="toggleAccordion(' + i + ')">' +
+                        '<span>' + sections[i].name + '</span>' +
+                        '<button class="edit-btn" onclick="editSectionName(event, ' + i + ')">Chỉnh sửa</button>' +
+                    '</div>' +
+                    '<div class="accordion-content" id="content-' + i + '">' + sectionHtml + '</div>' +
+                '</li>';
+            }
+            accordion.innerHTML = html;
+        }
+
+        // Thêm mục mới
+        function addNewSection() {
+            var newName = prompt('Nhập tên cho mục mới (hoặc để trống để dùng mặc định):', 'Mục Mới');
+            var name = (newName && newName.trim()) ? newName.trim() : 'Mục Mới';
+            var subCount = prompt('Nhập số lượng phần con (mặc định là 5):', '5');
+            var numSubs = parseInt(subCount, 10);
+            if (isNaN(numSubs) || numSubs < 1) {
+                numSubs = 5; // Mặc định 5 nếu nhập không hợp lệ
+            }
+            var newSubs = [];
+            for (var i = 0; i < numSubs; i++) {
+                newSubs.push({ data: '' });
+            }
+            sections.push({ name: name, subs: newSubs });
+            renderAccordion();
+            alert('Đã thêm mục "' + name + '" với ' + numSubs + ' phần con!');
+        }
+
+        // Toggle mở/đóng mục
+        function toggleAccordion(index) {
+            var content = document.getElementById('content-' + index);
+            if (content.className.indexOf('active') > -1) {
+                content.className = content.className.replace(' active', '');
+            } else {
+                content.className += ' active';
+            }
+        }
+
+        // Chỉnh sửa tên mục và số lượng phần con
+        function editSectionName(event, index) {
+            if (event) event.stopPropagation();
+            var newName = prompt('Nhập tên mới cho mục:', sections[index].name);
+            var name = (newName && newName.trim()) ? newName.trim() : sections[index].name;
+            var subCount = prompt('Nhập số lượng phần con (hiện tại: ' + sections[index].subs.length + '):', sections[index].subs.length);
+            var numSubs = parseInt(subCount, 10);
+            if (isNaN(numSubs) || numSubs < 1) {
+                numSubs = sections[index].subs.length; // Giữ nguyên nếu không hợp lệ
+            }
+            // Cập nhật tên
+            sections[index].name = name;
+            // Điều chỉnh số lượng phần con
+            var currentSubs = sections[index].subs;
+            var newSubs = [];
+            for (var i = 0; i < numSubs; i++) {
+                if (i < currentSubs.length) {
+                    // Giữ nguyên dữ liệu hiện có
+                    newSubs.push(currentSubs[i]);
+                } else {
+                    // Thêm phần con mới với dữ liệu rỗng
+                    newSubs.push({ data: '' });
+                }
+            }
+            sections[index].subs = newSubs;
+            renderAccordion();
+            alert('Đã cập nhật mục "' + name + '" với ' + numSubs + ' phần con!');
+        }
+
+        // Cập nhật dữ liệu
+        function updateData(sectionIndex, subIndex, value) {
+            sections[sectionIndex].subs[subIndex].data = value;
+        }
+
+        // Copy dữ liệu
+        function copyData(sectionIndex, subIndex) {
+            var textarea = document.querySelector('#content-' + sectionIndex + ' .sub-section:nth-child(' + (subIndex + 1) + ') .data-input');
+            var text = textarea.value;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(function() {
+                    alert('Đã copy dữ liệu!');
+                }).catch(function(err) {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            var textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                var successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                if (successful) {
+                    alert('Đã copy dữ liệu!');
+                } else {
+                    alert('Copy thủ công: Chọn và copy text trong ô nhập.');
+                }
+            } catch (err) {
+                document.body.removeChild(textArea);
+                alert('Copy thủ công: Chọn và copy text trong ô nhập.');
+            }
+        }
+
+        // Dán dữ liệu
+        function pasteData(sectionIndex, subIndex) {
+            var textarea = document.querySelector('#content-' + sectionIndex + ' .sub-section:nth-child(' + (subIndex + 1) + ') .data-input');
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.readText().then(function(text) {
+                    textarea.value = text;
+                    updateData(sectionIndex, subIndex, text);
+                    alert('Đã dán dữ liệu!');
+                }).catch(function(err) {
+                    fallbackPaste(textarea, sectionIndex, subIndex);
+                });
+            } else {
+                fallbackPaste(textarea, sectionIndex, subIndex);
+            }
+        }
+
+        function fallbackPaste(textarea, sectionIndex, subIndex) {
+            var text = prompt('Dán dữ liệu từ clipboard vào đây (thủ công):', textarea.value);
+            if (text !== null) {
+                textarea.value = text;
+                updateData(sectionIndex, subIndex, text);
+                alert('Đã cập nhật dữ liệu!');
+            }
+        }
+
+        // Xóa dữ liệu
+        function deleteData(sectionIndex, subIndex) {
+            if (confirm('Xóa dữ liệu này?')) {
+                var textarea = document.querySelector('#content-' + sectionIndex + ' .sub-section:nth-child(' + (subIndex + 1) + ') .data-input');
+                textarea.value = '';
+                updateData(sectionIndex, subIndex, '');
+            }
+        }
+
+        // Khởi tạo
+        renderAccordion();
+    </script>
+</body>
+</html>
