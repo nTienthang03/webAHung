@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Trang Web Quản Lý Dữ Liệu</title>
     <style>
-        /* Original CSS remains unchanged */
         * {
             margin: 0;
             padding: 0;
@@ -241,11 +240,22 @@
             { name: 'Mục 5', subs: [{ data: '' }, { data: '' }, { data: '' }, { data: '' }, { data: '' }] }
         ];
 
+        // Load sections from localStorage or use default
         var sections = [];
-        for (var i = 0; i < defaultSections.length; i++) {
-            sections[i] = {};
-            sections[i].name = defaultSections[i].name;
-            sections[i].subs = defaultSections[i].subs.slice();
+        var savedSections = localStorage.getItem('sections');
+        if (savedSections) {
+            sections = JSON.parse(savedSections);
+        } else {
+            for (var i = 0; i < defaultSections.length; i++) {
+                sections[i] = {};
+                sections[i].name = defaultSections[i].name;
+                sections[i].subs = defaultSections[i].subs.slice();
+            }
+        }
+
+        // Save sections to localStorage
+        function saveSections() {
+            localStorage.setItem('sections', JSON.stringify(sections));
         }
 
         // Tạo accordion
@@ -289,6 +299,7 @@
                 newSubs.push({ data: '' });
             }
             sections.push({ name: name, subs: newSubs });
+            saveSections(); // Save to localStorage
             renderAccordion();
             alert('Đã thêm mục "' + name + '" với ' + numSubs + ' phần con!');
         }
@@ -328,6 +339,7 @@
                 }
             }
             sections[index].subs = newSubs;
+            saveSections(); // Save to localStorage
             renderAccordion();
             alert('Đã cập nhật mục "' + name + '" với ' + numSubs + ' phần con!');
         }
@@ -335,6 +347,7 @@
         // Cập nhật dữ liệu
         function updateData(sectionIndex, subIndex, value) {
             sections[sectionIndex].subs[subIndex].data = value;
+            saveSections(); // Save to localStorage
         }
 
         // Copy dữ liệu
